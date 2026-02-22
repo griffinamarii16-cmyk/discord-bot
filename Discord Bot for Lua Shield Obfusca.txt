@@ -1,0 +1,33 @@
+// Discord Bot for Lua Shield Obfuscator
+// Deploy this on Railway, Render, or a VPS
+// 
+//
+// Setup:
+// 1. npm init -y
+// 2. npm install discord.js
+// 3. Create a bot at https://discord.com/developers/applications
+// 4. Set BOT_TOKEN environment variable
+// 5. node bot.js
+// 1. Create a bot at https://discord.com/developers/applications
+// 2. Set BOT_TOKEN environment variable
+// 3. node bot.js (it will auto-install dependencies)
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+// Auto-generate package.json and install deps if needed
+const pkgPath = path.join(__dirname, 'package.json');
+if (!fs.existsSync(pkgPath)) {
+  fs.writeFileSync(pkgPath, JSON.stringify({
+    name: "lua-shield-bot",
+    version: "1.0.0",
+    main: "bot.js",
+    scripts: { start: "node bot.js" },
+    dependencies: { "discord.js": "^14.16.3" }
+  }, null, 2));
+  console.log('📦 Created package.json');
+}
+if (!fs.existsSync(path.join(__dirname, 'node_modules', 'discord.js'))) {
+  console.log('📦 Installing dependencies...');
+  execSync('npm install', { cwd: __dirname, stdio: 'inherit' });
+}
+const { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes, AttachmentBuilder } = require('discord.js');
